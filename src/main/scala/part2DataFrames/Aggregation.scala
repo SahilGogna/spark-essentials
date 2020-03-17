@@ -64,4 +64,18 @@ object Aggregation extends App{
     )
     .orderBy(col("Avg_Rating"))
 
+  /**
+    * Exercises
+    *
+    * 1. Sum up ALL the profits of ALL the movies in the DF
+    * 2. Count how many distinct directors we have
+    * 3. Show the mean and standard deviation of US gross revenue for the movies
+    * 4. Compute the average IMDB rating and the average US gross revenue PER DIRECTOR
+    */
+
+  moviesDF.select(expr("US_Gross + Worldwide_Gross").as("Total profit")).select(sum("Total profit")).show()
+  moviesDF.select(countDistinct(col("Director"))).show()
+  moviesDF.select(mean("US_Gross"),stddev("US_Gross")).show()
+  moviesDF.groupBy("Director").agg(avg("IMDB_Rating"),avg("US_Gross")).show()
+
 }
