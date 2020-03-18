@@ -90,14 +90,23 @@ object Joins extends App {
   val titlesDF = readTable("titles")
 
   //1
-  val salariesGBEmpDf = salariesDF.groupBy(col("emp_no")).max("salary")
+  val salariesGBEmpDf = salariesDF.groupBy("emp_no").agg(max("salary").as("maxSalary"))
   val empMaxSalDf = employeesDF.join(salariesGBEmpDf, "emp_no" )
 
   //2
   val noManagerDf = employeesDF.join(deptManagersDF, employeesDF.col("emp_no") === deptManagersDF.col("emp_no"), "left_anti")
-  noManagerDf.show()
+
+  //3 top 10 best paid employees
+  val topTenSalDf = salariesDF.groupBy(col("emp_no")).agg(
+    max("salary") as("Max Sal")
+  ).sort("Max Sal").limit(10)
+
+  val topTenEmpSalDf = employeesDF.join(topTenSalDf,"emp_no")
 
   //3
+  val mostRecentJobTitlesDF = titlesDF.groupBy("emp_no", "title").agg(max("to_date"))
+  val bestPaidEmployeesDF = empMaxSalDf.orderBy(col("maxSalary").desc).limit(10)
+  val bestPaidJobsDF = bestPaidEmployeesDF.join(mostRecentJobTitlesDF, "emp_no")
 
-
+  bestPaidJobsDF.show()
 }
