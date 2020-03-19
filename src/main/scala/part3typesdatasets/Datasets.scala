@@ -73,6 +73,7 @@ object Datasets extends App {
 
   println(carsDS.map(_.Horsepower.getOrElse(0L)).reduce(_ + _) / carsDS.count())
 
+  // joins and grouping on github rtjvm
 
 
 }
