@@ -17,3 +17,5 @@ Some of the important guidelines to run the code on your machine:
 
 To stop postgres anytime execute following command
    - brew services stop postgres
+   
+Few of the recent examples are references from the material provided on www.dataedu.ca 
